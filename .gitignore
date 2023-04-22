@@ -1,0 +1,6 @@
+__pycache__
+.vscode
+output
+*.txt
+t.py
+run.py
