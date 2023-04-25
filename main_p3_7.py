@@ -91,6 +91,5 @@ def visualize(cleared_frames_arr):
     turtle.done()
     
 
-
 if __name__ == '__main__':
     visualize(cleared_frames_arr(get_frames_arr_from_file(PATH)))
