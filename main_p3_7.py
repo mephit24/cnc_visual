@@ -78,7 +78,10 @@ def visualize(cleared_frames_arr, manual=False):
     txt_cur.setpos(400, 400)
     txt_cur.pendown()
 
+    steps_count = 0
     for frame in cleared_frames_arr:
+        steps_count -= 1
+
         txt_cur.write(frame)
         txt_cur.penup()
         txt_cur.goto(txt_cur.pos() + (0, -12))
@@ -86,8 +89,8 @@ def visualize(cleared_frames_arr, manual=False):
 
         xy_cur.setpos(xy_cur.pos() + frame.xy())
         xz_cur.setpos(xz_cur.pos() + frame.xz())
-        if manual:
-            turtle.numinput('Next', 'Step (only 1):', default=1, minval=1, maxval=1)
+        if manual and steps_count < 1:
+            steps_count = turtle.numinput('Next', 'Step:', default=1, minval=1)
             continue
         time.sleep(DELAY)
 
