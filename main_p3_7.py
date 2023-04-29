@@ -12,14 +12,14 @@ def get_frames_arr_from_file(path_to_file):
 
 class ClearFrame:
 
-    _pattern = '([xX|yY|zZ])([\+|-]\d{6})'
-    _coords_etalon = {'X': 0.0, 'Y': 0.0, 'Z': 0.0}  
+    _pattern = r'([xX|yY|zZ])([\+|-]?\d{4}\.?\d{2})'
+    _zero_coords = {'X': 0.0, 'Y': 0.0, 'Z': 0.0}  
 
     def __init__(self, dirty_frame):
         self._dirty_frame = dirty_frame
-        _frames = re.findall(self._pattern, self._dirty_frame) 
-        self._cleared_frame = self._coords_etalon.copy()
-        self._cleared_frame.update({i[0]: int(i[1]) / 100 for i in sorted(_frames)})
+        _frame = re.findall(self._pattern, self._dirty_frame)
+        self._cleared_frame = self._zero_coords.copy()
+        self._cleared_frame.update({i[0]: int(i[1].replace('.', '')) / 100 for i in sorted(_frame)})
         
     def __repr__(self):
         return self._dirty_frame
@@ -51,7 +51,7 @@ def check_sum_coords(cleared_frames_arr):
     return (sum(xgen), sum(ygen), sum(zgen))
 
 
-def visualize(cleared_frames_arr):
+def visualize(cleared_frames_arr, manual=False):
     scr = turtle.Screen()
     scr.setup(1280, 900, startx=0, starty=0)
     scr.clear()
@@ -83,13 +83,16 @@ def visualize(cleared_frames_arr):
         txt_cur.penup()
         txt_cur.goto(txt_cur.pos() + (0, -12))
         txt_cur.pendown()
-        
+
         xy_cur.setpos(xy_cur.pos() + frame.xy())
         xz_cur.setpos(xz_cur.pos() + frame.xz())
+        if manual:
+            turtle.numinput('Next', 'Step (only 1):', default=1, minval=1, maxval=1)
+            continue
         time.sleep(DELAY)
 
     turtle.done()
-    
+
 
 if __name__ == '__main__':
     visualize(cleared_frames_arr(get_frames_arr_from_file(PATH)))
